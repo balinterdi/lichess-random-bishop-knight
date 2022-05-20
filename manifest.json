@@ -1,0 +1,22 @@
+{
+  "manifest_version": 2,
+  "name": "Random Bishop & Knight",
+  "version": "0.1",
+  "description": "Sets up a random position to practice bishop & knight checkmate",
+  "icons": {
+    "48": "icons/border-48.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://lichess.org/*"],
+      "js": ["set-random-bk.js"]
+    }
+  ],
+  "browser_action": {
+    "default_icon": "icons/knight-icon-60x60.png",
+    "default_title": "Set random position on board"
+  },
+  "background": {
+    "scripts": ["background.js"]
+  }
+}
