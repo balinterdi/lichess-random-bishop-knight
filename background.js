@@ -1,10 +1,9 @@
-console.log("background script");
-
 function onError(error) {
   console.error(`Error: ${error}`);
 }
 
-function sendMessageToTabs(tabs) {
+function sendSetUpBoard(tabs) {
+  console.log('sendSetupBoard');
   for (let tab of tabs) {
     browser.tabs
       .sendMessage(tab.id, { messageId: "set-up-board" })
@@ -17,12 +16,11 @@ function sendMessageToTabs(tabs) {
 }
 
 browser.browserAction.onClicked.addListener(() => {
-  console.log("Button clicked");
   browser.tabs
     .query({
       currentWindow: true,
       active: true,
     })
-    .then(sendMessageToTabs)
+    .then(sendSetUpBoard)
     .catch(onError);
 });
