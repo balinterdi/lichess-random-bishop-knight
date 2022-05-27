@@ -4,14 +4,14 @@ function onError(error) {
 
 const sendMessage = browser.tabs.sendMessage;
 
-function sendSetUpBoard(tabs) {
+function sendCommands(tabs) {
   for (let tab of tabs) {
     browser.tabs
       .sendMessage(tab.id, { messageId: 'go-to-editor' })
       .then(({ response }) => {
         if (response === 'on-editor') {
           setTimeout(() => {
-            sendMessage(tab.id, { messageId: 'set-up-board' })
+            sendMessage(tab.id, { messageId: 'play-with-computer' })
               .then(({ response }) => {
                 if (response === 'on-play-modal') {
                   setTimeout(() => {
@@ -36,6 +36,6 @@ browser.browserAction.onClicked.addListener(() => {
       currentWindow: true,
       active: true,
     })
-    .then(sendSetUpBoard)
+    .then(sendCommands)
     .catch(onError);
 });
