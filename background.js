@@ -4,38 +4,36 @@ function onError(error) {
 
 const sendMessage = browser.tabs.sendMessage;
 
-function sendCommands(tabs) {
-  for (let tab of tabs) {
-    browser.tabs
-      .sendMessage(tab.id, { messageId: 'go-to-editor' })
-      .then(({ response }) => {
-        if (response === 'on-editor') {
-          setTimeout(() => {
-            sendMessage(tab.id, { messageId: 'play-with-computer' })
-              .then(({ response }) => {
-                if (response === 'on-play-modal') {
-                  setTimeout(() => {
-                    sendMessage(tab.id, { messageId: 'load-fen' })
-                      .then(({ response }) => {
-                        console.log('Response for on-play-modal', response);
-                      });
-                  }, 250);
-                }
-              });
-          }, 250);
-        }
-
-      })
-      .catch(onError);
+async function sendCommands(tabs) {
+  try {
+    for (let tab of tabs) {
+      let { response } = await sendMessage(tab.id, { messageId: 'go-to-editor' });
+      if (response === 'on-editor') {
+        setTimeout(async () => {
+          let { response } = await sendMessage(tab.id, { messageId: 'play-with-computer' });
+          if (response === 'on-play-modal') {
+            setTimeout(async () => {
+              let { response } = await sendMessage(tab.id, { messageId: 'load-fen' });
+              console.log('Response for on-play-modal', response);
+            }, 250);
+          }
+        }, 250);
+      }
+    }
+  } catch(error) {
+    onError(error);
   }
 }
 
-browser.browserAction.onClicked.addListener(() => {
-  browser.tabs
-    .query({
-      currentWindow: true,
-      active: true,
-    })
-    .then(sendCommands)
-    .catch(onError);
+browser.browserAction.onClicked.addListener(async () => {
+  try {
+    let activeTabs = await browser.tabs
+      .query({
+        currentWindow: true,
+        active: true,
+      });
+    await sendCommands(activeTabs);
+  } catch(error) {
+    onError(error);
+  }
 });
