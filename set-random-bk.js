@@ -31,7 +31,7 @@ function startPlayWithComputer(resolve) {
 
 function loadFen(resolve) {
   let fenInput = document.querySelector('#fen-input');
-  fenInput.value = "4k3/8/8/3B4/8/3K1N2/8/8 w - - 0 1";
+  fenInput.value = randomFenWithBishopKnight();
 
   let event = new InputEvent('input');
   fenInput.dispatchEvent(event);
@@ -44,7 +44,7 @@ function loadFen(resolve) {
 browser.runtime.onMessage.addListener((request) => {
   return new Promise((resolve, reject) => {
     let { messageId } = request;
-    
+
     if (messageId === 'go-to-editor') {
       goToEditor(resolve);
     }

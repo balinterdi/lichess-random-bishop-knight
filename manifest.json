@@ -9,7 +9,7 @@
   "content_scripts": [
     {
       "matches": ["*://lichess.org/*"],
-      "js": ["set-random-bk.js"]
+      "js": ["set-random-bk.js", "random-fen.js"]
     }
   ],
   "browser_action": {
