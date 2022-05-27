@@ -13,6 +13,12 @@ function logElements() {
   console.log(document.querySelector('.color-submits [title="White"]'));
 }
 
+function goToEditor(resolve) {
+  let editorLink = document.querySelector('a[href="/editor"]');
+  editorLink.click();
+  resolve({ response: 'on-editor' });
+}
+
 function startPlayWithComputer(resolve) {
   let continueButton = findActionButtonWithText("continue from here");
   continueButton.click();
@@ -26,6 +32,7 @@ function startPlayWithComputer(resolve) {
 function loadFen(resolve) {
   let fenInput = document.querySelector("#fen-input");
   fenInput.value = "4k3/8/8/3B4/8/3K1N2/8/8 w - - 0 1";
+
   let event = new InputEvent('input');
   fenInput.dispatchEvent(event);
 
@@ -35,10 +42,13 @@ function loadFen(resolve) {
 }
 
 browser.runtime.onMessage.addListener((request) => {
-  // One needs to be on Board Editor /editor for the following to work
-  // TODO: The first step should be to go to /editor
   return new Promise((resolve, reject) => {
     let { messageId } = request;
+    
+    if (messageId === "go-to-editor") {
+      goToEditor(resolve);
+    }
+
     if (messageId === "set-up-board") {
       startPlayWithComputer(resolve);
     }
