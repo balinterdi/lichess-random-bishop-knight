@@ -3,22 +3,27 @@ function onError(error) {
 }
 
 const sendMessage = chrome.tabs.sendMessage;
+const onMessage = chrome.runtime.onMessage;
 
-async function sendCommands(tabs) {
+onMessage.addListener(({ response }, sender) => {
+  // console.log('Message received: ', response, 'from ', sender.tab.id);
+  if (response === 'on-editor') {
+    setTimeout(() => {
+      sendMessage(sender.tab.id, { messageId: 'play-with-computer' });
+    }, 250);
+  }
+
+  if (response === 'on-play-modal') {
+    setTimeout(() => {
+      sendMessage(sender.tab.id, { messageId: 'load-fen' });
+    }, 250);
+  }
+});
+
+function sendCommands(tabs) {
   try {
     for (let tab of tabs) {
-      let { response } = await sendMessage(tab.id, { messageId: 'go-to-editor' });
-      if (response === 'on-editor') {
-        setTimeout(async () => {
-          let { response } = await sendMessage(tab.id, { messageId: 'play-with-computer' });
-          if (response === 'on-play-modal') {
-            setTimeout(async () => {
-              let { response } = await sendMessage(tab.id, { messageId: 'load-fen' });
-              console.log('Response for on-play-modal', response);
-            }, 250);
-          }
-        }, 250);
-      }
+      sendMessage(tab.id, { messageId: 'go-to-editor' });
     }
   } catch(error) {
     onError(error);

@@ -13,48 +13,55 @@ function logElements() {
   console.log(document.querySelector('.color-submits [title="White"]'));
 }
 
-function goToEditor(resolve) {
+function goToEditor() {
   let editorLink = document.querySelector('a[href="/editor"]');
   editorLink.click();
-  resolve({ response: 'on-editor' });
+
+  /*
+  This only returns a Promise when the callback parameter is not specified, and with MV3+. The type inside the Promise is the same as the 1st argument to callback.
+  https://developer.chrome.com/docs/extensions/reference/runtime/#method-sendMessage
+  */
+  chrome.runtime.sendMessage(null, { response: 'on-editor'});
 }
 
-function startPlayWithComputer(resolve) {
+function startPlayWithComputer() {
   let continueButton = findActionButtonWithText('continue from here');
   continueButton.click();
 
   let playWithComputer = document.querySelector('#modal-wrap .button');
   playWithComputer.click();
 
-  resolve({ response: 'on-play-modal' });
+  chrome.runtime.sendMessage(null, { response: 'on-play-modal' });
 }
 
-function loadFen(resolve) {
+function loadFen() {
   let fenInput = document.querySelector('#fen-input');
   fenInput.value = randomFenWithBishopKnight();
 
   let event = new InputEvent('input');
   fenInput.dispatchEvent(event);
 
+  // TODO: Choose the most difficult engine level
+
   let playAsWhiteButton = document.querySelector('.color-submits [title="White"]');
   playAsWhiteButton.click();
-  resolve({ response: 'play-as-white' });
+
+  chrome.runtime.sendMessage(null, { response: 'game-started' });
 }
 
 chrome.runtime.onMessage.addListener((request) => {
-  return new Promise((resolve, reject) => {
-    let { messageId } = request;
+  let { messageId } = request;
 
-    if (messageId === 'go-to-editor') {
-      goToEditor(resolve);
-    }
+  if (messageId === 'go-to-editor') {
+    goToEditor();
+    chrome.runtime.sendMessage()
+  }
 
-    if (messageId === 'play-with-computer') {
-      startPlayWithComputer(resolve);
-    }
+  if (messageId === 'play-with-computer') {
+    startPlayWithComputer();
+  }
 
-    if (messageId === 'load-fen') {
-      loadFen(resolve);
-    }
-  });
+  if (messageId === 'load-fen') {
+    loadFen();
+  }
 });
