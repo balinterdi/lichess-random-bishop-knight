@@ -41,7 +41,7 @@ function loadFen(resolve) {
   resolve({ response: 'play-as-white' });
 }
 
-browser.runtime.onMessage.addListener((request) => {
+chrome.runtime.onMessage.addListener((request) => {
   return new Promise((resolve, reject) => {
     let { messageId } = request;
 

@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Random Bishop & Knight",
   "version": "0.1",
   "description": "Sets up a random position to practice bishop & knight checkmate",
@@ -12,11 +12,11 @@
       "js": ["set-random-bk.js", "random-fen.js"]
     }
   ],
-  "browser_action": {
+  "action": {
     "default_icon": "icons/knight-icon-60x60.png",
     "default_title": "Set random position on board"
   },
   "background": {
-    "scripts": ["background.js"]
+    "service_worker": "background.js"
   }
 }

@@ -2,7 +2,7 @@ function onError(error) {
   console.error(`Error: ${error}`);
 }
 
-const sendMessage = browser.tabs.sendMessage;
+const sendMessage = chrome.tabs.sendMessage;
 
 async function sendCommands(tabs) {
   try {
@@ -25,9 +25,9 @@ async function sendCommands(tabs) {
   }
 }
 
-browser.browserAction.onClicked.addListener(async () => {
+chrome.action.onClicked.addListener(async () => {
   try {
-    let activeTabs = await browser.tabs
+    let activeTabs = await chrome.tabs
       .query({
         currentWindow: true,
         active: true,
