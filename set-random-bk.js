@@ -41,7 +41,8 @@ function loadFen() {
   let event = new InputEvent('input');
   fenInput.dispatchEvent(event);
 
-  // TODO: Choose the most difficult engine level
+  let stockfishHighestLevel = document.querySelector('#sf_level_8');
+  stockfishHighestLevel.click();
 
   let playAsWhiteButton = document.querySelector('.color-submits [title="White"]');
   playAsWhiteButton.click();
